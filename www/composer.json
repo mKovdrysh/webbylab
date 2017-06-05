@@ -1,0 +1,15 @@
+{
+    "require": {
+        "smarty/smarty-dev": "^3.1"
+    },
+    "authors": [
+        {
+            "name": "Mariia Kovdrysh",
+            "email": "mary.kovdrish@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"Masha\\": "src/"}
+    }
+}
