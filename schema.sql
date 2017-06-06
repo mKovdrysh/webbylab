@@ -8,3 +8,5 @@ CREATE TABLE `movies` (
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
+ALTER TABLE `movies`
+	ADD FULLTEXT INDEX `title_actors` (`title`, `actors`);
