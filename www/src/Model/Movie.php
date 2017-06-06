@@ -17,17 +17,6 @@ class Movie extends AbstractModel
         ]);
     }
 
-    public function getList()
-    {
-        $stmt = $this->getPdo()->prepare(
-            'SELECT * FROM movies ORDER BY title'
-        );
-        $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        return $result;
-    }
-
     public function delete($id)
     {
         $stmt = $this->getPdo()->prepare(
@@ -38,11 +27,22 @@ class Movie extends AbstractModel
         ]);
     }
 
-    public function getResult($search)
+    public function getList($search = '', $sort = 'id', $order = 'DESC')
     {
-        $preparedTitle = '%' . $search . '%';
-        $stmt = $this->getPdo()->prepare('SELECT * FROM movies WHERE title LIKE :search OR actors LIKE :search');
-        $stmt->bindParam(':search', $preparedTitle);
+        $sort = in_array($sort, ['id', 'title', 'year']) ? $sort : 'id';
+        $order = in_array($order, ['ASC', 'DESC']) ? $order : 'DESC';
+
+        if ($search) {
+            $stmt = $this->getPdo()->prepare(
+                "SELECT * FROM movies WHERE MATCH (title, actors) AGAINST(:search) ORDER BY $sort $order"
+            );
+            $stmt->bindParam(':search', $search);
+        } else {
+            $stmt = $this->getPdo()->prepare(
+                "SELECT * FROM movies ORDER BY $sort $order"
+            );
+        }
+
         $stmt->execute();
 
         return $stmt->fetchALL(\PDO::FETCH_ASSOC);
@@ -83,3 +83,4 @@ class Movie extends AbstractModel
         }
     }
 }
+

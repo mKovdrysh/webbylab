@@ -9,13 +9,13 @@ class MovieController extends AbstractController
     public function indexAction()
     {
         $movie = new Movie();
-        $title = isset($_POST['title']) ? $_POST['title'] : null;
-        $result = $movie->getResult($title);
+        $search = isset($_GET['search']) ? $_GET['search'] : null;
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
 
         $this->getSmarty()->assign([
-            'movies' => $movie->getList(),
-            'result' => $result,
-            'title' => $title
+            'movies' => $movie->getList($search, $sort, 'ASC'),
+            'search' => $search,
+            'sort' => $sort
         ]);
         $this->getSmarty()->display('list.tpl');
     }
